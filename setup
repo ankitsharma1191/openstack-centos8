@@ -9,3 +9,37 @@ read #ip
 echo "$ip $hostname" >> /etc/hosts
 
 
+if  [ $? -eq 0 ]
+	then
+	sudo dnf install -y network-scripts
+	sudo systemctl disable --now firewalld NetworkManager
+	sudo systemctl enable network && sudo systemctl start network
+	sudo touch /etc/sysconfig/disable-deprecation-warnings
+
+	if [ $? -eq 0 ]
+		then
+		sudo setenforce 0
+		sudo sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/confi
+		sudo dnf -y install vim wget curl telnet bash-completion network-scripts dnf-utils
+		
+		if [ $? -eq 0 ]
+			then
+			sudo dnf config-manager --enable PowerTools
+			sudo dnf install -y centos-release-openstack-ussuri
+			sudo dnf -y update
+			
+			if [ $? -eq 0 ]
+				then
+				sudo dnf install -y openstack-packstack
+				sudo dnf -y module enable virt
+				sudo dnf update -y
+				sudo systemctl reboot
+				
+				if [ $? -eq 0 ]
+					then
+					sudo packstack --allinone --provision-demo=n
+		
+				fi
+			fi
+	fi
+fi
