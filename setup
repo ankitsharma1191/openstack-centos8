@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "please Enter Your Hostname" 
+read $hostname
+
+echo "Enter Your IP" 
+read #ip
+
+echo "$ip $hostname" >> /etc/hosts
+
+
